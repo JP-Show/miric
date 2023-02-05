@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users{
+  id Int @id @default(autoincrement())
+  first_name String @db.VarChar(20)
+  last_name String @db.VarChar(20)
+  email String @unique @db.VarChar(64)
+  avatar String
+  password String @db.VarChar(20)
+  created_at DateTime @default(now())
+  update_at DateTime @default(now())
+
+  Anime Anime[]
+  Category Category[]
+
+  @@map("users")
+}
+
+model Anime{
+  id Int @id @unique @default(autoincrement())
+  name String @unique @db.VarChar(255)
+  cover String
+  desc String @db.Text
+  rate Int @db.SmallInt
+  release DateTime
+  id_users Int
+  users Users @relation(fields: [id_users], references: [id])
+  created_at DateTime @default(now())
+  update_at DateTime @default(now())
+
+  Category Category[]
+
+  @@map("anime")
+}
+
+model Category{
+  id Int @id @unique @default(autoincrement())
+  id_anime Int
+  anime Anime @relation(fields: [id_anime], references: [id])
+  id_users Int
+  users Users @relation(fields: [id_users], references: [id])
+  name String @unique @db.VarChar(30)
+
+  @@map("category")
+}
