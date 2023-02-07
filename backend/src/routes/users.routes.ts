@@ -6,6 +6,7 @@ const usersControllers = new UsersControllers()
 
 const usersRouter = Router()
 
-usersRouter.post('/create', usersControllers.create)
+usersRouter.post('/', usersControllers.create)
+usersRouter.get('/:id', usersControllers.index)
 
 export { usersRouter }

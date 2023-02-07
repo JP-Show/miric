@@ -16,7 +16,7 @@ model Users{
   last_name String @db.VarChar(20)
   email String @unique @db.VarChar(64)
   avatar String
-  password String @db.VarChar(20)
+  password String @db.VarChar(255)
   created_at DateTime @default(now())
   update_at DateTime @default(now())
 
@@ -40,13 +40,13 @@ model Anime{
 
   Category Category[]
 
-  @@map("anime")
+  @@map("media")
 }
 
 model Category{
   id Int @id @unique @default(autoincrement())
-  id_anime Int
-  anime Anime @relation(fields: [id_anime], references: [id])
+  id_media Int
+  anime Anime @relation(fields: [id_media], references: [id])
   id_users Int
   users Users @relation(fields: [id_users], references: [id])
   name String @unique @db.VarChar(30)
