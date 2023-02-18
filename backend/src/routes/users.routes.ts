@@ -1,12 +1,13 @@
 import { Router } from 'express'
 
 import { UsersControllers } from '../controllers/UsersControllers'
+import { ensureAuthenticated } from '../middlewares/ensureAuthenticated'
 
 const usersControllers = new UsersControllers()
 
 const usersRouter = Router()
 
 usersRouter.post('/', usersControllers.create)
-usersRouter.get('/:id', usersControllers.index)
+usersRouter.get('/', ensureAuthenticated, usersControllers.index)
 
 export { usersRouter }

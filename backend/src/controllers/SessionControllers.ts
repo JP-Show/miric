@@ -1,10 +1,10 @@
 import { prisma } from '../services/prismaClient'
 import { jwt } from '../config/auth'
-import { AppError } from '../utils/AppError'
 
 import { sign } from 'jsonwebtoken'
-import { Request, Response } from 'express-serve-static-core'
+import { Request, Response } from 'express'
 import { compare } from 'bcrypt'
+import { ApiError } from '../helpers/api-error'
 
 export class SessionControllers {
   async create(req: Request, res: Response) {
@@ -17,13 +17,12 @@ export class SessionControllers {
     })
 
     if (!user) {
-      res.json(new AppError('email or password is incorrect', 403))
+      throw new ApiError('email or password is incorrect', 401)
     }
 
-    const passCompare = compare(password, user.password)
-
+    const passCompare: Boolean = await compare(password, user.password)
     if (!passCompare) {
-      res.json(new AppError('email or password is incorrect', 403))
+      throw new ApiError('email or password is incorrect 2', 401)
     }
 
     const { secret, expiresIn } = jwt

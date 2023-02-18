@@ -1,9 +1,8 @@
-import { AppError } from '../utils/AppError'
-
 import { Users } from '.prisma/client'
 import { hash } from 'bcrypt'
 import { prisma } from '../services/prismaClient'
-import { Request, Response } from 'express-serve-static-core'
+import { Request, Response } from 'express'
+import { ApiError } from '../helpers/api-error'
 
 export class UsersControllers {
   async create(req: Request, res: Response) {
@@ -14,12 +13,12 @@ export class UsersControllers {
         email: email.trim()
       }
     })
-    const passwordCript: string = await hash(password, 8)
+    const passwordCrypt: string = await hash(password, 8)
 
     if (emailExist) {
-      return res.json(new AppError(`email has been used`, 400))
+      throw new Error('email has been used')
     } else if (first_name == '' || email == '' || password == '') {
-      return res.json(new AppError(`missing camp`, 400))
+      throw new Error('missing camp')
     } else {
       await prisma.users.create({
         data: {
@@ -27,26 +26,24 @@ export class UsersControllers {
           last_name,
           email,
           avatar,
-          password: passwordCript
+          password: passwordCrypt
         }
       })
-      return res.send('created')
+      return res.json('user has been created')
     }
   }
   async index(req: Request, res: Response) {
-    const { id } = req.params
-    const idUser: number = +id
+    const id: number = req.user.id ?? 0
 
     const user = await prisma.users.findFirst({
       where: {
-        id: idUser
+        id: Number(id)
       }
     })
-
     if (!user) {
-      return res.json(new AppError('user not found', 400))
+      throw new ApiError('user not found', 404)
     }
 
-    return res.send(user)
+    return res.json(user)
   }
 }

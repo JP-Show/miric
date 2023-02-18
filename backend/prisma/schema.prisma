@@ -32,11 +32,13 @@ model Anime{
   cover String
   desc String @db.Text
   rate Int @db.SmallInt
+  status String
   release DateTime
   id_users Int
   users Users @relation(fields: [id_users], references: [id])
   created_at DateTime @default(now())
   update_at DateTime @default(now())
+
 
   Category Category[]
 
