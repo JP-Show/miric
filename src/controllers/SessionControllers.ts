@@ -30,6 +30,8 @@ export class SessionControllers {
       subject: String(user.id),
       expiresIn
     })
+    
+
     return res.json({ user, token })
   }
 }

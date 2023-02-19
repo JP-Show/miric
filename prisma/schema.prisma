@@ -10,48 +10,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users{
-  id Int @id @default(autoincrement())
-  first_name String @db.VarChar(20)
-  last_name String @db.VarChar(20)
-  email String @unique @db.VarChar(64)
-  avatar String
-  password String @db.VarChar(255)
+model Users {
+  id         Int      @id @default(autoincrement())
+  first_name String   @db.VarChar(20)
+  last_name  String   @db.VarChar(20)
+  email      String   @unique @db.VarChar(64)
+  avatar     String
+  password   String   @db.VarChar(255)
   created_at DateTime @default(now())
-  update_at DateTime @default(now())
+  update_at  DateTime @default(now())
 
-  Anime Anime[]
+  Media    Media[]
   Category Category[]
 
   @@map("users")
 }
 
-model Anime{
-  id Int @id @unique @default(autoincrement())
-  name String @unique @db.VarChar(255)
-  cover String
-  desc String @db.Text
-  rate Int @db.SmallInt
-  status String
-  release DateTime
-  id_users Int
-  users Users @relation(fields: [id_users], references: [id])
+model Media {
+  id         Int      @id @unique @default(autoincrement())
+  name       String   @unique @db.VarChar(255)
+  cover      String
+  desc       String   @db.Text
+  rate       Int      @db.SmallInt
+  status     String
+  release    DateTime
+  id_users   Int
+  users      Users    @relation(fields: [id_users], references: [id])
   created_at DateTime @default(now())
-  update_at DateTime @default(now())
-
+  update_at  DateTime @default(now())
 
   Category Category[]
 
   @@map("media")
 }
 
-model Category{
-  id Int @id @unique @default(autoincrement())
+model Category {
+  id       Int    @id @unique @default(autoincrement())
   id_media Int
-  anime Anime @relation(fields: [id_media], references: [id])
+  media    Media  @relation(fields: [id_media], references: [id])
   id_users Int
-  users Users @relation(fields: [id_users], references: [id])
-  name String @unique @db.VarChar(30)
+  users    Users  @relation(fields: [id_users], references: [id])
+  name     String @unique @db.VarChar(30)
 
   @@map("category")
 }

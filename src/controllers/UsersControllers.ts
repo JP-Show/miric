@@ -46,4 +46,18 @@ export class UsersControllers {
 
     return res.json(user)
   }
+  async delete(req: Request, res: Response) {
+    const user_id = req.user.id
+    if (!user_id) {
+      throw new ApiError('user not logged', 401)
+    }
+
+    await prisma.users.delete({
+      where: {
+        id: Number(user_id)
+      }
+    })
+
+    res.json('user has been deleted')
+  }
 }

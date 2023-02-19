@@ -9,5 +9,6 @@ const usersRouter = Router()
 
 usersRouter.post('/', usersControllers.create)
 usersRouter.get('/', ensureAuthenticated, usersControllers.index)
+usersRouter.delete('/', ensureAuthenticated, usersControllers.delete)
 
 export { usersRouter }
